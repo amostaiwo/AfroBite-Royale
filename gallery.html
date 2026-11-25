@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Gallery — AfroBite Royale</title>
+  <meta name="description" content="Step inside AfroBite Royale. A visual journey through our culinary artistry, luxurious ambience, and unforgettable moments." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600&family=Jost:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       ROOT VARIABLES (Matched to the AfroBite Logo)
+       ============================================================ */
+    :root {
+      --black: #050505;
+      --black-2: #0A0A0A;
+      --black-3: #111111;
+      --black-4: #1A1A1A;
+      
+      --gold-light: #FCE79A;
+      --gold: #D4AF37;
+      --gold-dark: #A67C00;
+      
+      --orange-light: #F9A03F;
+      --orange: #C75B12;
+      
+      --ivory: #F5F1E8;
+      --muted: #A8A29A;
+      
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Jost', 'Helvetica Neue', sans-serif;
+      --font-script: 'Great Vibes', cursive;
+      --transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--black);
+      color: var(--ivory);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    button, input, select { font-family: inherit; }
+
+    .svg-defs {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    /* ============================================================
+       SCROLL PROGRESS BAR
+       ============================================================ */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--orange));
+      z-index: 1000;
+      transition: width 0.08s linear;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+    }
+
+    /* ============================================================
+       TYPOGRAPHY HELPERS
+       ============================================================ */
+    .section-label {
+      display: inline-block;
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+      margin-right: 14px;
+      vertical-align: middle;
+      opacity: 0.7;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--ivory);
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      margin-bottom: 1.2rem;
+    }
+
+    h2 em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .container {
+      width: min(1340px, 92vw);
+      margin-inline: auto;
+    }
+
+    /* ============================================================
+       BUTTONS
+       ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 34px;
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+      color: var(--black);
+      border-color: var(--gold);
+      box-shadow: 0 8px 30px rgba(212, 175, 55, 0.22);
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 44px rgba(212, 175, 55, 0.4);
+    }
+
+    .btn-outline {
+      border-color: rgba(212, 175, 55, 0.45);
+      color: var(--gold);
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background: var(--gold);
+      color: var(--black);
+      border-color: var(--gold);
+      transform: translateY(-3px);
+    }
+
+    /* ============================================================
+       HEADER & LOGO
+       ============================================================ */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 900;
+      padding: 16px 0;
+      transition: var(--transition);
+      background: rgba(5, 5, 5, 0.85);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+    }
+
+    .site-header.scrolled {
+      padding: 10px 0;
+      background: rgba(5, 5, 5, 0.95);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .header-inner {
+      width: min(1340px, 92vw);
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .logo {
+      display: block;
+      width: 160px;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+
+    .logo-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.25));
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .nav-link {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245, 241, 232, 0.7);
+      position: relative;
+      padding: 6px 0;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      transition: width 0.4s var(--transition), left 0.4s var(--transition);
+    }
+
+    .nav-link:hover, .nav-link.active { color: var(--gold); }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; left: 0; }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      background: none;
+      border: none;
+      padding: 6px;
+      z-index: 1001;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 28px;
+      height: 1.5px;
+      background: var(--gold);
+      transition: var(--transition);
+      transform-origin: center;
+    }
+
+    .hamburger.active span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.active span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+    .mobile-nav {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 5, 5, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .mobile-nav.active { opacity: 1; visibility: visible; }
+
+    .mobile-nav a {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      color: var(--ivory);
+      letter-spacing: 0.08em;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .mobile-nav a:hover { color: var(--gold); transform: translateX(10px); }
+
+    /* ============================================================
+       PAGE HERO
+       ============================================================ */
+    .page-hero {
+      position: relative;
+      padding: 200px 0 120px;
+      text-align: center;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .page-hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.pexels.com/photos/35128914/pexels-photo-35128914.jpeg?auto=compress&cs=tinysrgb&w=1920');
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.2) saturate(0.8);
+      z-index: -2;
+    }
+
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(5,5,5,0.5) 0%, rgba(5,5,5,0.95) 80%);
+      z-index: -1;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      margin-bottom: 20px;
+    }
+
+    .page-hero p {
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+    }
+
+    /* ============================================================
+       GALLERY SECTION
+       ============================================================ */
+    .gallery-section {
+      padding: 80px 0 140px;
+      background: var(--black);
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 50px;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid rgba(212, 175, 55, 0.18);
+      color: rgba(245, 241, 232, 0.65);
+      padding: 11px 24px;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border-radius: 40px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      color: var(--black);
+      border-color: var(--gold);
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      box-shadow: 0 6px 24px rgba(212, 175, 55, 0.25);
+      font-weight: 500;
+    }
+
+    /* GALLERY GRID */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      cursor: pointer;
+      border: 1px solid rgba(212, 175, 55, 0.1);
+      transition: var(--transition);
+      group: gallery;
+    }
+
+    .gallery-item:hover {
+      border-color: rgba(212, 175, 55, 0.5);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(212, 175, 55, 0.1);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+      filter: brightness(0.8) saturate(0.9);
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.1);
+      filter: brightness(1) saturate(1.1);
+    }
+
+    /* HOVER OVERLAY */
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(5, 5, 5, 0.95) 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+    }
+
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    .gallery-overlay h3 {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      color: var(--gold-light);
+      transform: translateY(15px);
+      transition: transform 0.5s var(--transition);
+      margin-bottom: 4px;
+    }
+
+    .gallery-overlay span {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange-light);
+      transform: translateY(15px);
+      transition: transform 0.5s 0.05s var(--transition);
+    }
+
+    .gallery-item:hover .gallery-overlay h3,
+    .gallery-item:hover .gallery-overlay span {
+      transform: translateY(0);
+    }
+
+    .zoom-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(212, 175, 55, 0.2);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 1.2rem;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.4s var(--transition);
+    }
+
+    .gallery-item:hover .zoom-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ============================================================
+       LIGHTBOX
+       ============================================================ */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      background: rgba(5, 5, 5, 0.95);
+      backdrop-filter: blur(15px);
+    }
+
+    .lightbox.active { opacity: 1; visibility: visible; }
+
+    .lightbox-content {
+      position: relative;
+      max-width: 1200px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: scale(0.95);
+      transition: transform 0.4s var(--transition);
+    }
+
+    .lightbox.active .lightbox-content { transform: scale(1); }
+
+    .lightbox-img-wrap {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lightbox-image {
+      max-height: 75vh;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.8), 0 0 50px rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .lightbox-caption {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .lightbox-caption h3 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      color: var(--gold-light);
+      margin-bottom: 4px;
+    }
+
+    .lightbox-caption p {
+      color: var(--orange-light);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    /* CONTROLS */
+    .lightbox-close {
+      position: absolute;
+      top: -50px;
+      right: 0;
+      background: none;
+      border: none;
+      color: var(--gold);
+      font-size: 2rem;
+      cursor: pointer;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .lightbox-close:hover {
+      color: var(--ivory);
+      transform: rotate(90deg);
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .nav-btn {
+      pointer-events: auto;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(5, 5, 5, 0.6);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: var(--gold);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      backdrop-filter: blur(4px);
+    }
+
+    .nav-btn:hover {
+      background: var(--gold);
+      color: var(--black);
+      border-color: var(--gold);
+      transform: scale(1.1);
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .site-footer {
+      background: var(--black);
+      padding: 90px 0 0;
+      border-top: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1.3fr;
+      gap: 50px;
+      padding-bottom: 70px;
+    }
+
+    .footer-brand .logo { margin-bottom: 20px; width: 150px; }
+    .footer-brand p { font-size: 0.85rem; max-width: 280px; margin-bottom: 24px; }
+
+    .footer-socials { display: flex; gap: 12px; }
+    .footer-socials a {
+      width: 38px; height: 38px; border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--gold); transition: var(--transition);
+    }
+    .footer-socials a:hover { background: var(--gold); color: var(--black); transform: translateY(-3px); }
+
+    .footer-col h4 { font-family: var(--font-sans); font-size: 0.65rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 22px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul li, .footer-col ul a { font-size: 0.85rem; color: var(--muted); transition: color 0.3s ease; }
+    .footer-col ul a:hover { color: var(--gold); }
+
+    .footer-contact-item { display: flex; gap: 12px; font-size: 0.85rem; color: var(--muted); margin-bottom: 14px; }
+    .footer-contact-item span:first-child { color: var(--gold); flex-shrink: 0; }
+
+    .footer-bottom { border-top: 1px solid rgba(212, 175, 55, 0.08); padding: 24px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { font-size: 0.72rem; color: rgba(245, 241, 232, 0.35); }
+    .footer-bottom span { color: var(--gold); }
+
+    /* ============================================================
+       REVEAL ANIMATIONS
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active { opacity: 1; transform: none; }
+
+    @keyframes fadeInItem {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1100px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    }
+
+    @media (max-width: 860px) {
+      .main-nav { display: none; }
+      .hamburger { display: flex; }
+      .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+      .lightbox-nav { top: auto; bottom: -60px; justify-content: center; gap: 20px; }
+      .lightbox-close { top: -40px; right: 10px; }
+    }
+
+    @media (max-width: 600px) {
+      .page-hero { padding: 140px 0 80px; }
+      .page-hero h1 { font-size: clamp(2.5rem, 8vw, 4rem); }
+      .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .lightbox { padding: 15px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG DEFS -->
+  <svg class="svg-defs" aria-hidden="true">
+    <defs>
+      <linearGradient id="logoGold" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#FCE79A"/>
+        <stop offset="50%" stop-color="#D4AF37"/>
+        <stop offset="100%" stop-color="#A67C00"/>
+      </linearGradient>
+      <linearGradient id="logoOrange" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#F9A03F"/>
+        <stop offset="100%" stop-color="#C75B12"/>
+      </linearGradient>
+      <linearGradient id="logoSwoosh" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#A67C00"/>
+        <stop offset="40%" stop-color="#D4AF37"/>
+        <stop offset="100%" stop-color="#C75B12"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- SCROLL PROGRESS -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- HEADER -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <a href="index.html" class="logo" aria-label="AfroBite Royale Home">
+        <svg class="logo-svg" viewBox="0 0 1000 350" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <text x="80" y="240" font-family="'Playfair Display', serif" font-weight="800" font-size="180" fill="url(#logoGold)">AFR</text>
+          <g transform="translate(500, 170)">
+            <circle cx="0" cy="0" r="65" stroke="url(#logoGold)" stroke-width="18" fill="none"/>
+            <path d="M -15 -25 C -5 -35 10 -35 15 -20 C 18 -10 25 0 22 15 C 18 25 12 35 8 45 C 4 55 0 50 -5 40 C -10 30 -15 20 -22 10 C -28 0 -25 -15 -15 -25 Z" fill="url(#logoGold)"/>
+          </g>
+          <text x="580" y="240" font-family="'Playfair Display', serif" font-weight="800" font-size="180" fill="url(#logoOrange)">BITE</text>
+          <path d="M 100 280 Q 450 370 880 260 Q 550 320 100 280 Z" fill="url(#logoSwoosh)"/>
+        </svg>
+      </a>
+
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="menu.html" class="nav-link">Menu</a>
+        <a href="about.html" class="nav-link">Our Story</a>
+        <a href="gallery.html" class="nav-link active">Gallery</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="contact.html" class="btn btn-outline" style="padding: 10px 20px; font-size: 0.6rem;">Reserve</a>
+        <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="index.html">Home</a>
+    <a href="menu.html">Menu</a>
+    <a href="about.html">Our Story</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="container reveal">
+      <span class="section-label">A Visual Journey</span>
+      <h1>The <em>Gallery</em></h1>
+      <p>Step inside AfroBite Royale. Explore the artistry of our kitchen, the luxury of our dining room, and the joy of our guests.</p>
+    </div>
+  </section>
+
+  <!-- GALLERY SECTION -->
+  <section class="gallery-section">
+    <div class="container">
+      
+      <!-- FILTER BAR -->
+      <div class="filter-bar reveal" id="filterBar">
+        <button class="filter-btn active" data-filter="all">All Photos</button>
+        <button class="filter-btn" data-filter="ambience">Ambience</button>
+        <button class="filter-btn" data-filter="culinary">Culinary Art</button>
+        <button class="filter-btn" data-filter="drinks">Drinks</button>
+        <button class="filter-btn" data-filter="moments">Moments</button>
+      </div>
+
+      <!-- GALLERY GRID -->
+      <div class="gallery-grid" id="galleryGrid"></div>
+      
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close" id="lightboxClose">&times;</button>
+      
+      <div class="lightbox-img-wrap">
+        <button class="nav-btn" id="prevBtn" style="position: absolute; left: -70px;">&#10094;</button>
+        <img id="lightboxImg" class="lightbox-image" src="" alt="" />
+        <button class="nav-btn" id="nextBtn" style="position: absolute; right: -70px;">&#10095;</button>
+      </div>
+
+      <div class="lightbox-caption">
+        <h3 id="lightboxTitle"></h3>
+        <p id="lightboxCategory"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <svg class="logo-svg" viewBox="0 0 1000 350" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <text x="80" y="240" font-family="'Playfair Display', serif" font-weight="800" font-size="180" fill="url(#logoGold)">AFR</text>
+              <g transform="translate(500, 170)">
+                <circle cx="0" cy="0" r="65" stroke="url(#logoGold)" stroke-width="18" fill="none"/>
+                <path d="M -15 -25 C -5 -35 10 -35 15 -20 C 18 -10 25 0 22 15 C 18 25 12 35 8 45 C 4 55 0 50 -5 40 C -10 30 -15 20 -22 10 C -28 0 -25 -15 -15 -25 Z" fill="url(#logoGold)"/>
+              </g>
+              <text x="580" y="240" font-family="'Playfair Display', serif" font-weight="800" font-size="180" fill="url(#logoOrange)">BITE</text>
+              <path d="M 100 280 Q 450 370 880 260 Q 550 320 100 280 Z" fill="url(#logoSwoosh)"/>
+            </svg>
+          </a>
+          <p>A Taste of Africa, A Touch of Luxury. Five-star Nigerian cuisine, served with heritage and heart.</p>
+          <div class="footer-socials">
+            <a href="#">IG</a><a href="#">X</a><a href="#">FB</a><a href="#">TT</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="about.html">Our Story</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Hours</h4>
+          <ul>
+            <li>Mon – Thu: 12pm – 10pm</li>
+            <li>Fri – Sat: 12pm – 12am</li>
+            <li>Sunday: 1pm – 9pm</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <div class="footer-contact-item"><span>✦</span><span>12 Royal Palm Ave, Victoria Island, Lagos</span></div>
+          <div class="footer-contact-item"><span>✦</span><span>+234 800 000 0000</span></div>
+          <div class="footer-contact-item"><span>✦</span><span>reservations@afrobiteroyale.com</span></div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 <span>AfroBite Royale</span>. All rights reserved.</p>
+        <p>Crafted with heritage · Lagos · Abuja · London</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    // --- GALLERY DATA ---
+    const galleryData = [
+      { id: 1, src: 'https://images.pexels.com/photos/35128914/pexels-photo-35128914.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'The Grand Dining Room', category: 'ambience' },
+      { id: 2, src: 'https://images.pexels.com/photos/13915043/pexels-photo-13915043.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'Signature Party Jollof', category: 'culinary' },
+      { id: 3, src: 'https://images.pexels.com/photos/8963969/pexels-photo-8963969.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'Chef Amos at Work', category: 'moments' },
+      { id: 4, src: 'https://images.pexels.com/photos/36593606/pexels-photo-36593606.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'Suya Grill Masterclass', category: 'culinary' },
+      { id: 5, src: 'https://images.pexels.com/photos/37648019/pexels-photo-37648019.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'Elegant Soup Presentation', category: 'culinary' },
+      { id: 6, src: 'https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'The Royal Cocktail Bar', category: 'drinks' },
+      { id: 7, src: 'https://images.pexels.com/photos/14477852/pexels-photo-14477852.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'Artisanal Desserts', category: 'culinary' },
+      { id: 8, src: 'https://images.pexels.com/photos/1233413/pexels-photo-1233413.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'Zobo & Chapman', category: 'drinks' },
+      { id: 9, src: 'https://images.pexels.com/photos/15177424/pexels-photo-15177424.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'Private Dining Setup', category: 'ambience' },
+      { id: 10, src: 'https://images.pexels.com/photos/5333327/pexels-photo-5333327.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'Seafood Fried Rice', category: 'culinary' },
+      { id: 11, src: 'https://images.pexels.com/photos/8743817/pexels-photo-8743817.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'Guests Enjoying Dinner', category: 'moments' },
+      { id: 12, src: 'https://images.pexels.com/photos/37297540/pexels-photo-37297540.jpeg?auto=compress&cs=tinysrgb&w=1200', title: 'Golden Dodo & Plantain', category: 'culinary' }
+    ];
+
+    // --- DOM ELEMENTS ---
+    const galleryGrid = document.getElementById('galleryGrid');
+    const filterBar = document.getElementById('filterBar');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxTitle = document.getElementById('lightboxTitle');
+    const lightboxCategory = document.getElementById('lightboxCategory');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    // State
+    let currentGallery = [...galleryData];
+    let currentIndex = 0;
+
+    // --- RENDER GALLERY ---
+    function renderGallery(filter = 'all') {
+      if (filter === 'all') {
+        currentGallery = [...galleryData];
+      } else {
+        currentGallery = galleryData.filter(item => item.category === filter);
+      }
+
+      galleryGrid.innerHTML = currentGallery.map((item, index) => `
+        <div class="gallery-item" onclick="openLightbox(${index})" style="animation: fadeInItem 0.5s ${index * 0.05}s cubic-bezier(0.16,1,0.3,1) both;">
+          <img src="${item.src}" alt="${item.title}" loading="lazy" />
+          <div class="zoom-icon">+</div>
+          <div class="gallery-overlay">
+            <h3>${item.title}</h3>
+            <span>${item.category.charAt(0).toUpperCase() + item.category.slice(1)}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // --- FILTERING ---
+    filterBar.addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      renderGallery(btn.dataset.filter);
+    });
+
+    // --- LIGHTBOX LOGIC ---
+    function openLightbox(index) {
+      currentIndex = index;
+      updateLightboxContent();
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function updateLightboxContent() {
+      const item = currentGallery[currentIndex];
+      lightboxImg.src = item.src;
+      lightboxImg.alt = item.title;
+      lightboxTitle.textContent = item.title;
+      lightboxCategory.textContent = item.category.charAt(0).toUpperCase() + item.category.slice(1);
+    }
+
+    function showNext() {
+      if (currentIndex < currentGallery.length - 1) {
+        currentIndex++;
+      } else {
+        currentIndex = 0; // Loop back to start
+      }
+      updateLightboxContent();
+    }
+
+    function showPrev() {
+      if (currentIndex > 0) {
+        currentIndex--;
+      } else {
+        currentIndex = currentGallery.length - 1; // Loop to end
+      }
+      updateLightboxContent();
+    }
+
+    // Event Listeners for Lightbox
+    lightboxClose.addEventListener('click', closeLightbox);
+    nextBtn.addEventListener('click', showNext);
+    prevBtn.addEventListener('click', showPrev);
+    
+    // Close on backdrop click
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target.classList.contains('lightbox-content')) {
+        closeLightbox();
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') showNext();
+      if (e.key === 'ArrowLeft') showPrev();
+    });
+
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+      renderGallery('all');
+    });
+
+    // --- MOBILE NAV ---
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+
+    hamburger.addEventListener('click', () => {
+      const isActive = mobileNav.classList.toggle('active');
+      hamburger.classList.toggle('active', isActive);
+      hamburger.setAttribute('aria-expanded', isActive);
+    });
+
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('active');
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // --- HEADER SCROLL EFFECT ---
+    const header = document.getElementById('siteHeader');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 50);
+      
+      // Scroll progress
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      document.getElementById('scrollProgress').style.width = progress + '%';
+    }, { passive: true });
+
+    // --- REVEAL ON SCROLL ---
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  </script>
+</body>
+</html>
