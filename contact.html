@@ -9,6 +9,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600&family=Jost:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+  
+  <!-- Libraries for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <!-- EmailJS Library -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
   <style>
     /* ============================================================
@@ -835,13 +842,13 @@
 
     .ticket-actions {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
     }
 
     .ticket-actions .btn {
-      padding: 12px 18px;
-      font-size: 0.6rem;
+      padding: 12px 10px;
+      font-size: 0.55rem;
     }
 
     .ticket-close-btn {
@@ -931,26 +938,6 @@
     .reveal.active, .reveal-left.active, .reveal-right.active {
       opacity: 1;
       transform: none;
-    }
-
-    /* ============================================================
-       PRINT (Download Ticket)
-       ============================================================ */
-    @media print {
-      body * { visibility: hidden; }
-      .ticket-content, .ticket-content * { visibility: visible; }
-      .ticket-content {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        max-width: 100%;
-        border-radius: 0;
-        box-shadow: none;
-      }
-      .ticket-actions, .ticket-close-btn { display: none !important; }
-      .ticket-modal { position: static; padding: 0; }
-      .ticket-backdrop { display: none; }
     }
 
     /* ============================================================
@@ -1114,29 +1101,28 @@
           <p>Please fill out the form below. All fields are required.</p>
         </div>
 
-        <!-- Removed novalidate to ensure browser validation works perfectly -->
         <form id="contactForm">
           <div class="form-row">
             <div class="form-group">
               <label for="firstName">First Name *</label>
-              <input type="text" id="firstName" name="firstName" required placeholder="John" />
+              <input type="text" id="firstName" name="firstName" required placeholder="John" autocomplete="given-name" />
             </div>
             <div class="form-group">
               <label for="lastName">Last Name *</label>
-              <input type="text" id="lastName" name="lastName" required placeholder="Doe" />
+              <input type="text" id="lastName" name="lastName" required placeholder="Doe" autocomplete="family-name" />
             </div>
           </div>
 
           <div class="form-group">
             <label for="email">Email Address *</label>
-            <input type="email" id="email" name="email" required placeholder="john@example.com" />
+            <input type="email" id="email" name="email" required placeholder="john@example.com" autocomplete="email" />
           </div>
 
           <!-- PHONE WITH COUNTRY CODE -->
           <div class="form-group">
             <label for="phone">Phone Number *</label>
             <div class="phone-group">
-              <select id="phoneCode" name="phoneCode" required>
+              <select id="phoneCode" name="phoneCode" required autocomplete="tel-country-code">
                 <option value="+234" selected>🇳🇬 +234</option>
                 <option value="+44">🇬🇧 +44</option>
                 <option value="+1">🇺🇸 +1</option>
@@ -1149,14 +1135,14 @@
                 <option value="+49">🇩🇪 +49</option>
                 <option value="+61">🇦🇺 +61</option>
               </select>
-              <input type="tel" id="phone" name="phone" required placeholder="800 000 0000" />
+              <input type="tel" id="phone" name="phone" required placeholder="800 000 0000" autocomplete="tel" />
             </div>
           </div>
 
           <!-- COUNTRY -->
           <div class="form-group">
             <label for="country">Your Country *</label>
-            <select id="country" name="country" required>
+            <select id="country" name="country" required autocomplete="country-name">
               <option value="" disabled selected>Select your country</option>
               <option value="NG|Africa/Lagos">Nigeria</option>
               <option value="UK|Europe/London">United Kingdom</option>
@@ -1387,7 +1373,8 @@
         </p>
 
         <div class="ticket-actions">
-          <button class="btn btn-outline" id="downloadTicketBtn">⬇ Download</button>
+          <button class="btn btn-outline" id="downloadImageBtn" title="Download as Image">🖼 Image</button>
+          <button class="btn btn-outline" id="downloadPdfBtn" title="Download as PDF">📄 PDF</button>
           <button class="btn btn-gold" id="newReservationBtn">Book Another</button>
         </div>
       </div>
@@ -1396,6 +1383,13 @@
 
   <!-- JAVASCRIPT -->
   <script>
+    // ============================================================
+    // INITIALIZE EMAILJS (Replace with your actual Public Key)
+    // ============================================================
+    (function() {
+        emailjs.init("aGm2ZJ_1siaLqhten"); // <-- REPLACE THIS
+    })();
+
     /* ============================================================
        MOBILE NAV
        ============================================================ */
@@ -1509,10 +1503,12 @@
     const ticketModal = document.getElementById('ticketModal');
     const ticketBackdrop = document.getElementById('ticketBackdrop');
     const ticketCloseBtn = document.getElementById('ticketCloseBtn');
-    const downloadTicketBtn = document.getElementById('downloadTicketBtn');
+    const downloadImageBtn = document.getElementById('downloadImageBtn');
+    const downloadPdfBtn = document.getElementById('downloadPdfBtn');
     const newReservationBtn = document.getElementById('newReservationBtn');
+    const ticketContent = document.getElementById('ticketContent');
 
-    const RESTAURANT_EMAIL = 'oyelolatiwo323@gmail.com';
+    const RESTAURANT_EMAIL = 'oyelolataiwo323@gmail.com';
 
     function generateBookingRef() {
       const chars = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ';
@@ -1553,25 +1549,20 @@
     }
 
     function showTicket(data) {
-      try {
-        document.getElementById('ticketRef').textContent = data.ref;
-        document.getElementById('ticketName').textContent = `${data.firstName} ${data.lastName}`;
-        document.getElementById('ticketDate').textContent = formatReadableDate(data.date);
-        document.getElementById('ticketTimeWAT').textContent = data.timeWAT;
-        document.getElementById('ticketTimeLocal').textContent = data.timeLocal;
-        document.getElementById('ticketTZ').textContent = data.countryName;
-        document.getElementById('ticketGuests').textContent = data.guests;
-        document.getElementById('ticketOccasion').textContent = data.occasion;
-        document.getElementById('ticketEmail').textContent = data.email;
-        
-        generateQRPattern();
-        
-        ticketModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      } catch (err) {
-        console.error('Error showing ticket:', err);
-        alert('There was an issue displaying the ticket. Please check the console.');
-      }
+      document.getElementById('ticketRef').textContent = data.ref;
+      document.getElementById('ticketName').textContent = `${data.firstName} ${data.lastName}`;
+      document.getElementById('ticketDate').textContent = formatReadableDate(data.date);
+      document.getElementById('ticketTimeWAT').textContent = data.timeWAT;
+      document.getElementById('ticketTimeLocal').textContent = data.timeLocal;
+      document.getElementById('ticketTZ').textContent = data.countryName;
+      document.getElementById('ticketGuests').textContent = data.guests;
+      document.getElementById('ticketOccasion').textContent = data.occasion;
+      document.getElementById('ticketEmail').textContent = data.email;
+      
+      generateQRPattern();
+      
+      ticketModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
     }
 
     function closeTicket() {
@@ -1585,11 +1576,35 @@
       tzMessage.innerHTML = 'Select a country and time to see your local reservation time.';
     }
 
-    contactForm.addEventListener('submit', (e) => {
+    // Helper to generate PDF Blob from the ticket HTML
+    async function generateTicketPDF() {
+        const originalTransform = ticketContent.style.transform;
+        ticketContent.style.transform = 'none';
+        
+        const canvas = await html2canvas(ticketContent, {
+            scale: 2,
+            backgroundColor: '#0f0f0f',
+            useCORS: true,
+            logging: false
+        });
+        
+        ticketContent.style.transform = originalTransform;
+        
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'px',
+            format: [canvas.width, canvas.height]
+        });
+        
+        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        return pdf.output('blob');
+    }
+
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      // Browser native validation will catch missing fields before this even fires.
-      // Just to be extra safe, check validity.
       if (!contactForm.checkValidity()) {
         contactForm.reportValidity();
         return;
@@ -1603,11 +1618,6 @@
       const fullPhone = phoneCode + ' ' + phone;
       
       const countryVal = countrySelect.value;
-      if (!countryVal) {
-        alert('Please select your country.');
-        return;
-      }
-      
       const dateVal = dateInput.value;
       const timeVal = timeSelect.value;
       const guests = document.getElementById('guests').value;
@@ -1632,58 +1642,151 @@
       // Loading State
       const originalBtnHTML = submitBtn.innerHTML;
       submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span class="spinner"></span><span>Sending...</span>`;
+      submitBtn.innerHTML = `<span class="spinner"></span><span>Processing...</span>`;
 
-      // Fire and forget email sending so it never blocks the UI
-      const formData = new FormData();
-      formData.append('_subject', `New Reservation: ${firstName} ${lastName} - ${bookingRef}`);
-      formData.append('_template', 'table');
-      formData.append('_captcha', 'false');
-      formData.append('_cc', email);
-      
-      formData.append('Booking Reference', bookingRef);
-      formData.append('Guest Name', `${firstName} ${lastName}`);
-      formData.append('Email Address', email);
-      formData.append('Phone Number', fullPhone);
-      formData.append('Country', countryName);
-      formData.append('Reservation Date', formatReadableDate(dateVal));
-      formData.append('Restaurant Time (WAT)', timeWAT);
-      formData.append('Local Time', `${timeLocal} (${countryName})`);
-      formData.append('Number of Guests', guests);
-      formData.append('Occasion', occasion);
-      formData.append('Special Requests', message || 'None');
+      // 1. Show the ticket to the user first (so we can capture it)
+      showTicket({
+        ref: bookingRef,
+        firstName, lastName, email,
+        date: dateVal,
+        timeWAT,
+        timeLocal,
+        countryName,
+        guests,
+        occasion
+      });
 
-      fetch(`https://formsubmit.co/ajax/${RESTAURANT_EMAIL}`, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: formData
-      }).catch(err => console.warn('Email delivery error:', err));
+      // 2. Generate the PDF
+      let ticketPdfBlob = null;
+      try {
+        ticketPdfBlob = await generateTicketPDF();
+      } catch (err) {
+        console.error("PDF generation failed", err);
+      }
 
-      // Show ticket instantly with a slight artificial delay for the "sending" effect
-      setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnHTML;
+      // 3. Prepare EmailJS Data
+      // We convert the PDF Blob to Base64 for EmailJS
+      let pdfBase64 = null;
+      if (ticketPdfBlob) {
+          pdfBase64 = await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.readAsDataURL(ticketPdfBlob);
+          });
+      }
 
-        showTicket({
-          ref: bookingRef,
-          firstName, lastName, email,
-          date: dateVal,
-          timeWAT,
-          timeLocal,
-          countryName,
-          guests,
-          occasion
-        });
-      }, 1200);
+      const templateParams = {
+          to_email: email, // Guest's email
+          to_name: `${firstName} ${lastName}`,
+          subject: `Your Reservation Confirmed - ${bookingRef}`,
+          booking_ref: bookingRef,
+          date: formatReadableDate(dateVal),
+          time_wat: timeWAT,
+          time_local: timeLocal,
+          guests: guests,
+          occasion: occasion,
+          ticket_pdf: pdfBase64 // Attachment variable
+      };
+
+      // 4. Send Email to Guest (With Ticket)
+      try {
+          await emailjs.send('service_fvjona3', 'template_aecg4nz', templateParams); // <-- REPLACE THESE
+          console.log("Email sent to guest successfully");
+      } catch (err) {
+          console.error("Failed to send email to guest", err);
+      }
+
+      // 5. Send Notification to Restaurant (oyelolataiwo323@gmail.com)
+      // (You can use the same template, just override the 'to_email')
+      try {
+          await emailjs.send('service_fvjona3', 'template_aecg4nz', {
+              ...templateParams,
+              to_email: RESTAURANT_EMAIL,
+              to_name: "AfroBite Admin",
+              subject: `New Reservation Alert: ${firstName} ${lastName} - ${bookingRef}`
+          });
+          console.log("Notification sent to restaurant successfully");
+      } catch (err) {
+          console.error("Failed to send notification to restaurant", err);
+      }
+
+      // Reset Button
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnHTML;
     });
 
-    // Ticket Actions
+    /* ============================================================
+       DOWNLOAD LOGIC (Image & PDF)
+       ============================================================ */
+    
+    async function captureTicket() {
+      const originalTransform = ticketContent.style.transform;
+      ticketContent.style.transform = 'none';
+      
+      const canvas = await html2canvas(ticketContent, {
+        scale: 2,
+        backgroundColor: '#0f0f0f',
+        useCORS: true,
+        logging: false
+      });
+      
+      ticketContent.style.transform = originalTransform;
+      return canvas;
+    }
+
+    downloadImageBtn.addEventListener('click', async () => {
+      try {
+        const originalText = downloadImageBtn.innerHTML;
+        downloadImageBtn.innerHTML = '...';
+        
+        const canvas = await captureTicket();
+        const link = document.createElement('a');
+        const ref = document.getElementById('ticketRef').textContent;
+        link.download = `AfroBite_Ticket_${ref}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        downloadImageBtn.innerHTML = originalText;
+      } catch (err) {
+        console.error('Image download failed:', err);
+        alert('Failed to download image.');
+        downloadImageBtn.innerHTML = '🖼 Image';
+      }
+    });
+
+    downloadPdfBtn.addEventListener('click', async () => {
+      try {
+        const originalText = downloadPdfBtn.innerHTML;
+        downloadPdfBtn.innerHTML = '...';
+        
+        const canvas = await captureTicket();
+        const imgData = canvas.toDataURL('image/png');
+        
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'px',
+          format: [canvas.width, canvas.height]
+        });
+        
+        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        
+        const ref = document.getElementById('ticketRef').textContent;
+        pdf.save(`AfroBite_Ticket_${ref}.pdf`);
+        
+        downloadPdfBtn.innerHTML = originalText;
+      } catch (err) {
+        console.error('PDF download failed:', err);
+        alert('Failed to download PDF.');
+        downloadPdfBtn.innerHTML = '📄 PDF';
+      }
+    });
+
+    /* ============================================================
+       TICKET ACTIONS
+       ============================================================ */
     ticketCloseBtn.addEventListener('click', closeTicket);
     ticketBackdrop.addEventListener('click', closeTicket);
-
-    downloadTicketBtn.addEventListener('click', () => {
-      window.print();
-    });
 
     newReservationBtn.addEventListener('click', () => {
       closeTicket();
