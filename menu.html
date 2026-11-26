@@ -195,7 +195,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      z-index: 1000;
+      z-index: 1000; /* High z-index to stay above mobile menu */
       padding: 16px 0;
       transition: var(--transition);
       background: rgba(5, 5, 5, 0.85);
@@ -280,6 +280,76 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    /* HAMBURGER */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      background: none;
+      border: none;
+      padding: 6px;
+      z-index: 1001;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 28px;
+      height: 1.5px;
+      background: var(--gold);
+      transition: var(--transition);
+      transform-origin: center;
+    }
+
+    .hamburger.active span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.active span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+    /* ============================================================
+       UPDATED MOBILE NAV (TOP RIGHT DROPDOWN)
+       ============================================================ */
+    .mobile-nav {
+      position: fixed;
+      top: 70px; 
+      right: 4vw; 
+      width: 240px; 
+      background: rgba(10, 10, 10, 0.98); 
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(212, 175, 55, 0.2); 
+      border-radius: 8px; 
+      z-index: 999; 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 0;
+      gap: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: var(--transition);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .mobile-nav.active { 
+      opacity: 1; 
+      visibility: visible; 
+      transform: translateY(0);
+    }
+
+    .mobile-nav a:not(.btn) {
+      font-family: var(--font-serif);
+      font-size: 1.1rem; 
+      color: var(--ivory);
+      letter-spacing: 0.08em;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .mobile-nav a:not(.btn):hover { 
+      color: var(--gold); 
+      transform: scale(1.05);
     }
 
     /* ============================================================
@@ -961,6 +1031,9 @@
 
     @media (max-width: 860px) {
       .main-nav { display: none; }
+      .hamburger { display: flex; }
+      .header-btn { display: none; } /* Hide top reserve button on mobile */
+      
       .lightbox-grid { grid-template-columns: 1fr; }
       .lightbox-image { min-height: 280px; max-height: 320px; }
       .lightbox-details { padding: 32px 26px; }
@@ -1054,10 +1127,29 @@
           🛒 <span>Cart</span>
           <div class="cart-badge" id="cartBadge" style="display:none;">0</div>
         </button>
-        <a href="contact.html" class="btn btn-outline" style="padding: 10px 20px; font-size: 0.6rem;">Reserve</a>
+        <!-- Added header-btn class to hide on mobile -->
+        <a href="contact.html" class="btn btn-outline header-btn" style="padding: 10px 20px; font-size: 0.6rem;">Reserve</a>
+        
+        <!-- Added Hamburger -->
+        <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <a href="index.html">Home</a>
+    <a href="menu.html">Menu</a>
+    <a href="about.html">Our Story</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="contact.html">Contact</a>
+    <!-- Added Reserve button inside the mobile menu for better visibility -->
+    <a href="contact.html" class="btn btn-gold" style="margin-top: 10px; font-size: 0.65rem; width: 80%;">Reserve a Table</a>
+  </div>
 
   <!-- PAGE HERO & SEARCH -->
   <section class="page-hero">
@@ -1386,6 +1478,10 @@
     const cartBadge = document.getElementById('cartBadge');
     const checkoutBtn = document.getElementById('checkoutBtn');
 
+    // NEW MOBILE NAV ELEMENTS
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+
     // --- STATE ---
     let cart = [];
     let currentMealId = null;
@@ -1397,6 +1493,21 @@
       renderChefSpecial();
       renderPopular();
       updateCartUI();
+    });
+
+    // --- MOBILE NAV LOGIC ---
+    hamburger.addEventListener('click', () => {
+      const isActive = mobileNav.classList.toggle('active');
+      hamburger.classList.toggle('active', isActive);
+      hamburger.setAttribute('aria-expanded', isActive);
+    });
+
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('active');
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
     });
 
     // --- RENDER FUNCTIONS ---
