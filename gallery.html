@@ -194,7 +194,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      z-index: 900;
+      z-index: 1000;
       padding: 16px 0;
       transition: var(--transition);
       background: rgba(5, 5, 5, 0.85);
@@ -292,33 +292,50 @@
     .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
     .hamburger.active span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
+    /* ============================================================
+       UPDATED MOBILE NAV (TOP RIGHT DROPDOWN)
+       ============================================================ */
     .mobile-nav {
       position: fixed;
-      inset: 0;
-      background: rgba(5, 5, 5, 0.98);
+      top: 70px;
+      right: 4vw;
+      width: 240px;
+      background: rgba(10, 10, 10, 0.98);
       backdrop-filter: blur(20px);
-      z-index: 999;
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 8px;
+      z-index: 999; /* Stays below the header so the X button is clickable */
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 28px;
+      padding: 24px 0;
+      gap: 20px;
       opacity: 0;
       visibility: hidden;
+      transform: translateY(-10px);
       transition: var(--transition);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
     }
 
-    .mobile-nav.active { opacity: 1; visibility: visible; }
+    .mobile-nav.active { 
+      opacity: 1; 
+      visibility: visible; 
+      transform: translateY(0);
+    }
 
-    .mobile-nav a {
+    .mobile-nav a:not(.btn) {
       font-family: var(--font-serif);
-      font-size: 1.8rem;
+      font-size: 1.1rem;
       color: var(--ivory);
       letter-spacing: 0.08em;
       transition: color 0.3s ease, transform 0.3s ease;
     }
 
-    .mobile-nav a:hover { color: var(--gold); transform: translateX(10px); }
+    .mobile-nav a:not(.btn):hover { 
+      color: var(--gold); 
+      transform: scale(1.05);
+    }
 
     /* ============================================================
        PAGE HERO
@@ -683,6 +700,8 @@
     @media (max-width: 860px) {
       .main-nav { display: none; }
       .hamburger { display: flex; }
+      .header-btn { display: none; } /* Hide top reserve button on mobile */
+      
       .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
       .lightbox-nav { top: auto; bottom: -60px; justify-content: center; gap: 20px; }
       .lightbox-close { top: -40px; right: 10px; }
@@ -748,7 +767,8 @@
       </nav>
 
       <div class="header-actions">
-        <a href="contact.html" class="btn btn-outline" style="padding: 10px 20px; font-size: 0.6rem;">Reserve</a>
+        <!-- Added header-btn class to hide on mobile -->
+        <a href="contact.html" class="btn btn-outline header-btn" style="padding: 10px 20px; font-size: 0.6rem;">Reserve</a>
         <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
@@ -763,6 +783,8 @@
     <a href="about.html">Our Story</a>
     <a href="gallery.html">Gallery</a>
     <a href="contact.html">Contact</a>
+    <!-- Added Reserve button inside the mobile menu for better visibility -->
+    <a href="contact.html" class="btn btn-gold" style="margin-top: 10px; font-size: 0.65rem; width: 80%;">Reserve a Table</a>
   </div>
 
   <!-- PAGE HERO -->
